@@ -1,0 +1,26 @@
+/* 基本样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none !important;
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 表格统一样式 */
+.el-table .el-table__header-wrapper thead th,
+.el-table .el-table__fixed-header-wrapper thead th {
+  padding: 0;
+  background-color: #f9f9f9;
+  height: 50px;
+  line-height: 40px;
+  color: #283543;
+}
