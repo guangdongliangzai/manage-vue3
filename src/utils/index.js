@@ -1,6 +1,6 @@
-const hexList: string[] = []
+const hexList = []
 for (let i = 0; i <= 15; i++) {
-    hexList[i] = i.toString(16)
+  hexList[i] = i.toString(16)
 }
 
 class utils {
@@ -11,10 +11,10 @@ class utils {
    * @param {String} value 传入的时间戳
    * @param {String} String 返回的时间
    */
-  formatDate(value:any) {
-    let date:any = new Date(value)
-    let y:any = date.getFullYear()
-    let MM:any = date.getMonth() + 1
+  formatDate(value) {
+    let date = new Date(value)
+    let y = date.getFullYear()
+    let MM = date.getMonth() + 1
     MM = MM < 10 ? '0' + MM : MM
     let d = date.getDate()
     d = d < 10 ? '0' + d : d
@@ -133,8 +133,8 @@ class utils {
  * @param {any} array:数组
  * @param {any} key:去重字段
  */
-  arrayToDistinct(array:any, key:any) {
-    let newArr:Array<any> = []
+  arrayToDistinct(array, key) {
+    let newArr = []
     array.forEach(item => {
       const model = newArr.find(arrModel => arrModel[key] === item[key]) || false;
       if (!model) {
@@ -166,14 +166,14 @@ class utils {
     document.body.appendChild(link)
   }
 
- 
+
   /**
  * 生成随机数
  * @param min 最小值
  * @param max 最大值
  * @returns 生成的随机数
  */
-  randomNum(min: number, max: number) {
+  randomNum(min, max) {
     switch (arguments.length) {
       case 1:
         return parseInt((Math.random() * min + 1).toString(), 10)
@@ -191,21 +191,21 @@ class utils {
  * 生成全球唯一标识
  * @returns uuid
  */
- uuid(): string {
-  let uuid = ''
-  for (let i = 1; i <= 36; i++) {
+  uuid() {
+    let uuid = ''
+    for (let i = 1; i <= 36; i++) {
       if (i === 9 || i === 14 || i === 19 || i === 24) {
-          uuid += '-'
+        uuid += '-'
       } else if (i === 15) {
-          uuid += 4
+        uuid += 4
       } else if (i === 20) {
-          uuid += hexList[(Math.random() * 4) | 8]
+        uuid += hexList[(Math.random() * 4) | 8]
       } else {
-          uuid += hexList[(Math.random() * 16) | 0]
+        uuid += hexList[(Math.random() * 16) | 0]
       }
+    }
+    return uuid
   }
-  return uuid
-}
 
 
 }

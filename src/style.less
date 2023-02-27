@@ -14,6 +14,11 @@ body {
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
 }
+div {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
 /* 表格统一样式 */
 .el-table .el-table__header-wrapper thead th,
@@ -23,4 +28,22 @@ body {
   height: 50px;
   line-height: 40px;
   color: #283543;
+}
+.textNowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text_isTwo {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.el-form-item {
+  &.is-required {
+    padding-bottom: 20px !important;
+  }
 }

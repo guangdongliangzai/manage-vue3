@@ -4,8 +4,14 @@
     <div class="header-container">
       <SvgIcon class="header-icon-img" :icons="'Grid'" />
       <div class="header-icon" @click="collapseChage">后台管理系统</div>
+      <div class="data_txt">{{ $filters.dateTime(timeTxt) }}</div>
       <div class="header-user">
-        <el-avatar shape="circle" :src="avatar" class="user-avatar"></el-avatar>
+        <el-avatar
+          shape="circle"
+          :src="avatar"
+          class="user-avatar"
+          @click="operate = true"
+        ></el-avatar>
         <el-dropdown class="dropdown">
           <span class="el-dropdown-link" style="color: #fff; cursor: pointer">
             &nbsp;&nbsp; <SvgIcon class="dropdown-ArrowDown" :icons="'ArrowDown'" />
@@ -44,6 +50,34 @@
       </div>
     </div>
   </div>
+  <!-- 对话框表单 -->
+  <el-dialog
+    class="my-operate-dialog"
+    :close-on-click-modal="false"
+    :model-value="operate ? true : false"
+    :destroy-on-close="true"
+    width="500px"
+    @close="operate = false"
+  >
+    <template #header>
+      <div class="title" v-drag="['.my-operate-dialog', '.el-dialog__header']">
+        信息管理
+      </div>
+    </template>
+    <el-form @keyup.enter="onSubmit()" :rules="rules" :model="adminInfo">
+      <el-form-item label="用户名" label-width="80px" prop="username">
+        <el-input v-model="adminInfo.username"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" label-width="80px" prop="password">
+        <el-input type="password" v-model="adminInfo.password"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div>
+        <el-button @click="operate = false" type="primary">保存</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="less" scoped>
@@ -78,8 +112,13 @@
       width: 300px;
       line-height: 70px;
     }
+    .data_txt {
+      margin-left: auto;
+      margin-right: 0;
+      color: #fff;
+    }
     .header-user {
-      flex: 1;
+      width: 200px;
       text-align: right;
       .user-avatar {
         width: 50px;
@@ -148,24 +187,6 @@
     }
   }
 }
-div {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-.textNowrap {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.text_isTwo {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-box-orient: vertical;
-}
 
 .el-aside {
   background: white;
@@ -193,7 +214,7 @@ import { useStore } from "vuex";
 
 const router = useRouter();
 const store = useStore();
-
+let timeTxt = ref(new Date().getTime());
 let isCollapse = ref(false);
 let menuLink = ref([
   {
@@ -209,7 +230,7 @@ let menuLink = ref([
     childList: [
       {
         path: "/user/list",
-        title: "系统设置",
+        title: "用户管理",
         icons: "Filter",
         isChild: false,
       },
@@ -217,6 +238,17 @@ let menuLink = ref([
   },
 ]);
 let activePath = ref("");
+let operate = ref(false);
+
+let adminInfo = ref({ username: "", password: "" });
+const rules = reactive({
+  username: [{ required: true, message: "请填写用户名" }],
+  password: [{ required: true, message: "请填写密码" }],
+});
+const onSubmit = () => {
+  operate.value = false;
+};
+
 // 挂载 DOM 之前
 onBeforeMount(() => {
   activePath.value = store.getters.nowTabs.path || "/index";

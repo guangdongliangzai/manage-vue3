@@ -38,7 +38,6 @@ export default defineConfig(({ mode }) => {
       Components({
         resolvers: [ElementPlusResolver(),],
       }),
-
       //vue2的项目
       // createVuePlugin({
       //   vueTemplateOptions: {},
@@ -72,6 +71,19 @@ export default defineConfig(({ mode }) => {
           replacement: "/src/components",
         },
       ],
+
+      module: {
+        rules: [
+          {
+            test: /\.tsx?$/,
+            loader: 'ts-loader',
+            exclude: /node_modules/,
+            options: {
+              appendTsSuffixTo: [/\.vue$/],
+            }
+          }
+        ]
+      }
     },
     css: {
       // postcss: {

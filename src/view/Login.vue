@@ -35,7 +35,7 @@ import { login } from "@/api/user";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
-const { proxy } = getCurrentInstance();
+
 const router = useRouter();
 const form = reactive({
   username: "",
@@ -54,10 +54,9 @@ const onSubmit = () => {
       store.dispatch("updateNowTabs", model);
       store.dispatch("saveTabs", model);
       document.title = document.title || meta.title;
-      proxy.$commonJs.changeView("/home");
-      // router.push({
-      //   path: "/home",
-      // });
+      router.push({
+        path: "/home",
+      });
       // const res = await  login(form);
       // if (res.data) {
       //   if (res.data.success) {

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, } from 'vue-router'
 import defaultRouter from "./default";
-import { getSession } from "@/tool/storage";
+import { Local } from "@/tool/storage";
 
 
 const routes = [
@@ -32,7 +32,7 @@ const router = createRouter({
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
     if (to.meta.login) {
-        const access_token = getSession("access_token") || "";
+        const access_token = Local.get("access_token") || "";
         const hrefs = window.location.href;
         if (access_token || (hrefs.indexOf("?") > -1 && hrefs.indexOf("access_token") > -1)) {
             next();

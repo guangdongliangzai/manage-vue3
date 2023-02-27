@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ElMessage } from 'element-plus'
+import { Session } from "@/tool/storage";
 // 1. 创建axios实例
 const instance = axios.create({
   // 接口
@@ -10,7 +11,7 @@ const instance = axios.create({
 // 2.请求拦截
 instance.interceptors.request.use(
   config => {
-    let token = sessionStorage.getItem('token')
+    let token = Session.get('token')
     if (token) {
       config.headers['token'] = token
     }

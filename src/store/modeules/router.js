@@ -1,7 +1,7 @@
 /**
  * 路由管理
  */
-import { setSession, getSession } from "@/tool/storage";
+import { Session } from "@/tool/storage";
 export default {
   namespace: 'true',
   state() {
@@ -22,22 +22,21 @@ export default {
       const index = state.routerTabs.findIndex((x) => x.path == path)
       if (index < 0) {
         state.routerTabs.push(Tab);
-        setSession("_routerTabs", state.routerTabs)
+        Session.set("_routerTabs", state.routerTabs)
       }
       // console.log("state.routerTabs", state.routerTabs)
     },
     //选择路由
     selectTabs(state, nowTabs) {
       state.nowTabs = nowTabs;
-
-      setSession("_nowTabs", state.nowTabs)
+      Session.set("_nowTabs", state.nowTabs)
     },
     delTabs(state, Tab) {
       const { path } = Tab;
       const index = state.routerTabs.findIndex((x) => x.path == path)
       if (index > -1) {
         state.routerTabs.splice(index, 1)
-        setSession("_routerTabs", state.routerTabs)
+        Session.set("_routerTabs", state.routerTabs)
       }
     },
     clearTabs(state) {

@@ -76,7 +76,8 @@
 <script setup>
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-
+import useCurrentInstance from "@/utils/useCurrentInstance";
+const { proxy } = useCurrentInstance();
 const store = useStore();
 const tabScrollbarRef = ref();
 const navTabs = reactive({ routerTabs: store.getters.routerTabs });
@@ -92,6 +93,15 @@ const state = reactive({
 });
 const emit = defineEmits(["emitMenu"]);
 const router = useRouter();
+const routerName = ref("");
+// 挂载 DOM 之前
+onBeforeMount(() => {
+  proxy.$mitt.on("onRouteName", (name) => {
+    console.log("onRouteName", name);
+    routerName.value = name;
+  });
+});
+
 //监听路由变化
 watch(
   () => unref(router.currentRoute),
@@ -99,14 +109,15 @@ watch(
     const { meta, params, path, query } = route;
     //添加tab
     const model = {
-      title: meta.title || document.title,
+      title: routerName.value || meta.title,
       path: path,
       params: params,
       query: query,
     };
     store.dispatch("updateNowTabs", model);
     store.dispatch("saveTabs", model);
-    document.title = document.title || meta.title;
+    proxy.$mitt.emit("onTabViewClose", route);
+    document.title = routerName.value || meta.title;
     isTabs();
   }
 );

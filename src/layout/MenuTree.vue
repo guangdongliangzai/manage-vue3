@@ -91,14 +91,16 @@
 </style>
 
 <script setup>
-import { setSession } from "@/tool/storage";
 import MenuTree from "./MenuTree.vue";
 import { useRouter } from "vue-router";
+import useCurrentInstance from "@/utils/useCurrentInstance";
+const { proxy } = useCurrentInstance();
 const router = useRouter();
 const props = defineProps(["menuLink"]);
 
 function selectMenu(item) {
   router.push(item.path);
-  document.title = item.title;
+  proxy.$mitt.emit("onRouteName", item.title);
+  // document.title = item.title;
 }
 </script>
