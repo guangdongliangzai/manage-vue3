@@ -41,7 +41,8 @@ export default {
     },
     //清理路由
     clearTabs(state, item) {
-      state.routerTabs = [item]
+      state.routerTabs = []
+      state.routerTabs.push(item);
     }
   },
   actions: {
@@ -59,7 +60,7 @@ export default {
     clearTabs(context) {
       const model = { title: "首页", path: "/home", params: {}, query: {} }
       context.commit("clearTabs", model);
-      // context.commit("selectTabs", model)
+      context.commit("selectTabs", model)
     },
     oneTabs(context, Tabs) {
       context.commit("clearTabs", Tabs);

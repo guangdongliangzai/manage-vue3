@@ -202,7 +202,6 @@
               color: #000000;
               margin-top: 15px;
               vertical-align: middle;
-              display: block;
             }
           }
         }

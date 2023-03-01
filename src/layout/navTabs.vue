@@ -114,7 +114,6 @@ const initTabs = (route) => {
   };
   store.dispatch("updateNowTabs", model);
   store.dispatch("saveTabs", model);
-  // proxy.$mitt.emit("onTabViewClose", route);
   document.title = routerName.value || meta.title;
   isTabs();
 };
@@ -168,20 +167,14 @@ const onContextmenuItem = (item) => {
       break;
     case "closeOther":
       store.dispatch("oneTabs", preventTab.menu);
+      navTabs.routerTabs = store.getters.routerTabs;
       onTab(preventTab.menu);
-
-      //     store.dispatch("updateNowTabs", model);
-      // store.dispatch("saveTabs", model);
       break;
     case "closeAll":
       store.dispatch("clearTabs");
-      setTimeout(() => {
-        onTab(store.getters.nowTabs);
-      }, 200);
-
-      // location.reload();
+      navTabs.routerTabs = store.getters.routerTabs;
+      router.push(store.getters.nowTabs);
       break;
-
     default:
       break;
   }
