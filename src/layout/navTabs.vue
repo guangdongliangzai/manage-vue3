@@ -1,12 +1,12 @@
 <template>
-  <div class="nav-tabs" ref="tabScrollbarRef">
+  <div class="nav-tabs">
     <div
       v-for="(item, index) in navTabs.routerTabs"
       @click="onTab(item)"
-      @contextmenu.prevent="onContextmenu(item, $event)"
+      @contextmenu.prevent="onContextmenu(item, index, $event)"
       class="ba-nav-tab"
       :key="index"
-      :class="{ active: navTabsIndex == index }"
+      :class="{ active: navTabspath == item.path }"
     >
       <div class="tabs-name">{{ item.title }}</div>
       <SvgIcon
@@ -17,6 +17,7 @@
       />
     </div>
   </div>
+  <Contextmenu ref="contextmenuRef" @contextmenuItemClick="onContextmenuItem" />
 </template>
 <style lang="less" scoped>
 .nav-tabs {
@@ -49,7 +50,6 @@
     display: inline-flex;
     height: 30px;
     line-height: 30px;
-    box-shadow: 2px 2px 2px 2px #c8c9cc;
     margin-right: 10px;
     padding-left: 20px;
     padding-right: 10px;
@@ -57,8 +57,9 @@
     text-align: center;
     cursor: pointer;
     &.active {
-      background-color: #2661ef !important;
-      color: #ffffff;
+      box-shadow: 2px 2px 2px 2px #c8c9cc;
+      background-color: #ffffff !important;
+      color: #000000;
     }
     .tabs-name {
       font-size: 14px;
@@ -74,27 +75,19 @@
 </style>
 
 <script setup>
+import Contextmenu from "./contextmenu.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import useCurrentInstance from "@/utils/useCurrentInstance";
+import { nextTick } from "vue";
 const { proxy } = useCurrentInstance();
-const store = useStore();
-const tabScrollbarRef = ref();
-const navTabs = reactive({ routerTabs: store.getters.routerTabs });
-const navTabsIndex = ref(0);
-const state = reactive({
-  contextmenuItems: [
-    { name: "refresh", label: "重新加载", icon: "fa fa-refresh" },
-    { name: "close", label: "关闭标签", icon: "fa fa-times" },
-    { name: "fullScreen", label: "当前标签全屏", icon: "el-icon-FullScreen" },
-    { name: "closeOther", label: "关闭其他标签", icon: "fa fa-minus" },
-    { name: "closeAll", label: "关闭全部标签", icon: "fa fa-stop" },
-  ],
-});
-const emit = defineEmits(["emitMenu"]);
 const router = useRouter();
+const store = useStore(); //路由管理
+let navTabs = reactive({ routerTabs: store.getters.routerTabs });
+const navTabspath = ref("");
+const emit = defineEmits(["emitMenu"]);
+// 挂载监听接收的标题
 const routerName = ref("");
-// 挂载 DOM 之前
 onBeforeMount(() => {
   proxy.$mitt.on("onRouteName", (name) => {
     console.log("onRouteName", name);
@@ -106,67 +99,98 @@ onBeforeMount(() => {
 watch(
   () => unref(router.currentRoute),
   (route) => {
-    const { meta, params, path, query } = route;
-    //添加tab
-    const model = {
-      title: routerName.value || meta.title,
-      path: path,
-      params: params,
-      query: query,
-    };
-    store.dispatch("updateNowTabs", model);
-    store.dispatch("saveTabs", model);
-    proxy.$mitt.emit("onTabViewClose", route);
-    document.title = routerName.value || meta.title;
-    isTabs();
+    initTabs(route);
   }
 );
 
+const initTabs = (route) => {
+  const { meta, params, path, query } = route;
+  //添加tab
+  const model = {
+    title: routerName.value || meta.title,
+    path: path,
+    params: params,
+    query: query,
+  };
+  store.dispatch("updateNowTabs", model);
+  store.dispatch("saveTabs", model);
+  // proxy.$mitt.emit("onTabViewClose", route);
+  document.title = routerName.value || meta.title;
+  isTabs();
+};
 //选了哪个tab
 const isTabs = () => {
   const path = store.getters.nowTabs.path || "/index";
-  let index = navTabs.routerTabs.findIndex((x) => x.path == path);
-  if (index < 1) {
-    index = 0;
-  }
-  navTabsIndex.value = index;
+  navTabspath.value = path;
 };
-
+//关闭tab
 const closeTab = (item, index) => {
-  store.dispatch("delTabs", item);
-  if (navTabsIndex.value == index) {
+  if (navTabspath.value == item.path) {
     let tap = index > 0 ? index - 1 : index + 1;
     if (tap > navTabs.routerTabs.length) {
       tap = navTabs.routerTabs.length;
     }
     onTab(navTabs.routerTabs[tap]);
   }
+  store.dispatch("delTabs", item);
 };
-
+//切换
 const onTab = (item) => {
   const { path, params, query } = item;
+  if (path == store.getters.nowTabs.path) {
+    return;
+  }
   router.push({ path: path, params: params, query: query });
   emit("emitMenu", path);
 };
-
-const contextmenuRef = ref();
-const onContextmenu = (menu, el) => {
-  // 禁用刷新
-  // state.contextmenuItems[0].disabled = route.path !== menu.path;
-  // // 禁用关闭其他和关闭全部
-  // state.contextmenuItems[4].disabled = state.contextmenuItems[3].disabled =
-  //   navTabs.state.tabsView.length == 1 ? true : false;
-  console.log(menu, el);
-  const { clientX, clientY } = el;
-  contextmenuRef.value.onShowContextmenu(menu, {
+//右键菜单内容
+const contextmenuRef = ref(null);
+let preventTab = reactive({}); //储存当前右键的路由
+const onContextmenu = (menu, index, el) => {
+  if (navTabs.routerTabs.length < 2) {
+    return;
+  }
+  preventTab = { menu, index };
+  let { clientX, clientY } = el;
+  contextmenuRef.value.onShowContextmenu({
     x: clientX,
     y: clientY,
   });
 };
+const onContextmenuItem = (item) => {
+  console.log(item.name);
+  switch (item.name) {
+    // case "refresh":
+    //   location.reload();
+    //   break;
+    case "close":
+      closeTab(preventTab.menu, preventTab.index);
+      break;
+    case "closeOther":
+      store.dispatch("oneTabs", preventTab.menu);
+      onTab(preventTab.menu);
 
-const activeBoxStyle = reactive({
-  width: "0",
-  transform: "translateX(0px)",
+      //     store.dispatch("updateNowTabs", model);
+      // store.dispatch("saveTabs", model);
+      break;
+    case "closeAll":
+      store.dispatch("clearTabs");
+      setTimeout(() => {
+        onTab(store.getters.nowTabs);
+      }, 200);
+
+      // location.reload();
+      break;
+
+    default:
+      break;
+  }
+};
+
+onMounted(() => {
+  nextTick(() => {
+    console.log(" contextmenuRef.value", contextmenuRef.value);
+  });
 });
 
 // 挂载 DOM 之前

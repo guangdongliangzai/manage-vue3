@@ -34,6 +34,7 @@ import { login } from "@/api/user";
 // import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { Session } from "@/tool/storage";
 const store = useStore();
 
 const router = useRouter();
@@ -54,6 +55,7 @@ const onSubmit = () => {
       store.dispatch("updateNowTabs", model);
       store.dispatch("saveTabs", model);
       document.title = document.title || meta.title;
+      Session.set("userInfo", { ...form, name: "广东靓仔" });
       router.push({
         path: "/home",
       });

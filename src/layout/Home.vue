@@ -1,52 +1,66 @@
 <template>
   <div class="home-container">
-    <!-- header -->
-    <div class="header-container">
-      <SvgIcon class="header-icon-img" :icons="'Grid'" />
-      <div class="header-icon" @click="collapseChage">后台管理系统</div>
-      <div class="data_txt">{{ $filters.dateTime(timeTxt) }}</div>
-      <div class="header-user">
-        <el-avatar
-          shape="circle"
-          :src="avatar"
-          class="user-avatar"
-          @click="operate = true"
-        ></el-avatar>
-        <el-dropdown class="dropdown">
-          <span class="el-dropdown-link" style="color: #fff; cursor: pointer">
-            &nbsp;&nbsp; <SvgIcon class="dropdown-ArrowDown" :icons="'ArrowDown'" />
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click.native="logout">退出系统</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+    <!-- 菜单 -->
+    <div class="html-menu">
+      <div class="layout-logo">
+        <img class="logo-img" src="~@/assets/vite.svg" alt="logo" />
+        <div v-show="!isCollapse" class="website-name">管理系统</div>
       </div>
+      <el-menu
+        :default-active="activePath"
+        class="el-menu-vertical"
+        :collapse="isCollapse"
+        unique-opened
+        :collapse-transition="false"
+      >
+        <MenuTree :menuLink="menuLink" />
+      </el-menu>
     </div>
     <div class="html-content">
-      <!-- 菜单 -->
-      <div class="_content-menu">
-        <div class="toggle-button" @click="isCollapse = !isCollapse">
-          <SvgIcon class="toggle-button-icon" :icons="isCollapse ? 'Expand' : 'Fold'" />
+      <!-- header -->
+      <div class="header-container">
+        <SvgIcon
+          class="header-icon-img"
+          :icons="!isCollapse ? 'DArrowLeft' : 'DArrowRight'"
+          @click="isCollapse = !isCollapse"
+        />
+        <div class="header-user">
+          <div class="data_txt">{{ $filters.dateTime(timeTxt) }}</div>
+          <el-avatar
+            shape="circle"
+            :src="avatar"
+            class="user-avatar"
+            @click="operate = true"
+          />
+          <el-dropdown class="dropdown">
+            <div class="el-dropdown-link">
+              <div class="user-name">{{ userInfo && userInfo.name }}</div>
+              <SvgIcon class="dropdown-ArrowDown" :icons="'ArrowDown'" />
+            </div>
+
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click.native="logout">退出系统</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
-        <el-menu
-          :default-active="activePath"
-          class="el-menu-vertical"
-          :collapse="isCollapse"
-        >
-          <MenuTree :menuLink="menuLink" />
-        </el-menu>
       </div>
       <!-- 主要内容 -->
       <div class="_content-main">
         <MenuHeader @emitMenu="emitMenu" />
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" />
-          </keep-alive>
-          <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" />
-        </router-view>
+        <div class="_router-main">
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component
+                :is="Component"
+                :key="$route.name"
+                v-if="$route.meta.keepAlive"
+              />
+            </keep-alive>
+            <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" />
+          </router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -89,101 +103,124 @@
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
-  .header-container {
+  display: flex;
+  .html-menu {
+    max-width: 200px;
+    height: 100%;
+    overflow-y: auto;
     position: relative;
-    width: 100vw;
-    height: 70px;
-    padding: 0 30px;
-    line-height: 70px;
-    display: flex;
-    background-color: #242f42;
-    .header-icon-img {
-      color: #fff;
-      margin-top: 15px;
-      display: block;
-      font-size: 40px;
-      width: 40px;
-      height: 40px;
-    }
-    .header-icon {
-      padding-left: 10px;
-      font-size: 22px;
-      color: #fff;
-      width: 300px;
-      line-height: 70px;
-    }
-    .data_txt {
-      margin-left: auto;
-      margin-right: 0;
-      color: #fff;
-    }
-    .header-user {
-      width: 200px;
-      text-align: right;
-      .user-avatar {
-        width: 50px;
-        height: 50px;
+    background: rgb(25, 26, 35);
+
+    .layout-logo {
+      width: 100%;
+      height: 50px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      display: flex;
+      padding: 0 10px;
+      .logo-img {
+        width: 30px;
+        height: 30px;
         margin-top: 10px;
       }
-      .dropdown {
-        margin-top: 27px;
+      .website-name {
+        flex: 1;
+        color: #fff;
+        font-weight: 600;
         font-size: 20px;
-        .dropdown-ArrowDown {
-          width: 25px;
-          height: auto;
-        }
+        padding-left: 10px;
+        line-height: 50px;
       }
+      .toggle-button-icon {
+        font-size: 20px;
+        color: #ffffff;
+        width: 30px;
+        height: 25px;
+        margin: auto;
+        display: block;
+      }
+    }
+
+    .el-menu-vertical {
+      background: rgb(25, 26, 35);
+      border-right: none;
+    }
+    .el-menu-vertical:not(.el-menu--collapse) {
+      width: 200px;
+      min-height: 400px;
     }
   }
+  .html-menu::-webkit-scrollbar {
+    display: none;
+  }
+
   .html-content {
-    width: 100%;
+    flex: 1;
     height: 100%;
-    display: flex;
     overflow: hidden;
-    ._content-menu {
-      max-width: 230px;
-      height: 100%;
-      overflow-y: auto;
+    .header-container {
       position: relative;
-      padding-top: 25px;
-      .toggle-button {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #d9e0e7;
-        font-size: 18px;
-        line-height: 25px;
-        color: #fff;
-        text-align: center;
-        letter-spacing: 0.2em;
-        cursor: pointer;
-        color: black;
-        .toggle-button-icon {
-          font-size: 20px;
-          color: black;
-          width: 30px;
-          height: 25px;
-        }
+      width: 100%;
+      height: 50px;
+      padding: 0 20px;
+      line-height: 50px;
+      display: flex;
+      background: #fff;
+      .header-icon-img {
+        width: 20px;
+        height: 20px;
+        color: #9b9a9a;
+        margin-top: 15px;
       }
-      .el-menu-vertical:not(.el-menu--collapse) {
-        width: 200px;
-        min-height: 400px;
-        .el-menu-icons {
-          width: 25px;
-          height: 25px;
-          font-size: 25px;
-          margin-right: 10px;
+      .header-user {
+        margin-left: auto;
+        display: flex;
+        .data_txt {
+          font-size: #9b9a9a;
+          line-height: 50px;
+          padding-right: 15px;
+          font-size: 14px;
+        }
+        .user-avatar {
+          width: 30px;
+          height: 30px;
+          margin-top: 10px;
+        }
+        .dropdown {
+          .el-dropdown-link {
+            display: flex;
+            .user-name {
+              padding-left: 15px;
+              color: #000000;
+              line-height: 50px;
+              padding-right: 5px;
+            }
+            .dropdown-ArrowDown {
+              width: 20px;
+              height: 20px;
+              color: #000000;
+              margin-top: 15px;
+              vertical-align: middle;
+              display: block;
+            }
+          }
         }
       }
     }
+
     ._content-menu::-webkit-scrollbar {
       display: none;
     }
     ._content-main {
-      flex: 1;
+      width: 100%;
       height: 100%;
       overflow: hidden;
+      ._router-main {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
     }
   }
 }
@@ -209,8 +246,9 @@ import avatar from "@/assets/img/avator.jpg";
 import { reactive } from "vue-demi";
 import { useRouter } from "vue-router";
 import MenuTree from "./MenuTree.vue";
-import MenuHeader from "./header.vue";
+import MenuHeader from "./navTabs.vue";
 import { useStore } from "vuex";
+import { Session, Local } from "@/tool/storage";
 
 const router = useRouter();
 const store = useStore();
@@ -220,7 +258,7 @@ let menuLink = ref([
   {
     path: "/home",
     title: "首页",
-    icons: "House",
+    icons: "HomeFilled",
     isChild: false,
   },
   {
@@ -234,12 +272,18 @@ let menuLink = ref([
         icons: "Filter",
         isChild: false,
       },
+      {
+        path: "/user/Welcome",
+        title: "欢迎用户",
+        icons: "User",
+        isChild: false,
+      },
     ],
   },
 ]);
 let activePath = ref("");
 let operate = ref(false);
-
+let userInfo = reactive({});
 let adminInfo = ref({ username: "", password: "" });
 const rules = reactive({
   username: [{ required: true, message: "请填写用户名" }],
@@ -251,19 +295,18 @@ const onSubmit = () => {
 
 // 挂载 DOM 之前
 onBeforeMount(() => {
+  userInfo = Session.get("userInfo");
   activePath.value = store.getters.nowTabs.path || "/index";
 });
 
 const emitMenu = (path) => {
+  console.log("emitMenu", path);
   activePath.value = path;
 };
 // 清除缓存
 const logout = () => {
-  sessionStorage.clear();
+  Session.clear();
+  Local.clear();
   router.push("/login");
-  sessionStorage.clear();
-  setTimeout(() => {
-    location.reload();
-  }, 100);
 };
 </script>

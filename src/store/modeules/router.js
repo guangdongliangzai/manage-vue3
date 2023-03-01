@@ -11,7 +11,8 @@ export default {
         title: "",
         path: "",
         params: "",
-        query: ""
+        query: "",
+        authNode: []//页面权限
       },
     }
   },
@@ -22,25 +23,25 @@ export default {
       const index = state.routerTabs.findIndex((x) => x.path == path)
       if (index < 0) {
         state.routerTabs.push(Tab);
-        Session.set("_routerTabs", state.routerTabs)
+
       }
       // console.log("state.routerTabs", state.routerTabs)
     },
     //选择路由
     selectTabs(state, nowTabs) {
       state.nowTabs = nowTabs;
-      Session.set("_nowTabs", state.nowTabs)
     },
+    //删除路由
     delTabs(state, Tab) {
       const { path } = Tab;
       const index = state.routerTabs.findIndex((x) => x.path == path)
       if (index > -1) {
         state.routerTabs.splice(index, 1)
-        Session.set("_routerTabs", state.routerTabs)
       }
     },
-    clearTabs(state) {
-      state.routerTabs = []
+    //清理路由
+    clearTabs(state, item) {
+      state.routerTabs = [item]
     }
   },
   actions: {
@@ -56,7 +57,12 @@ export default {
       context.commit("saveTabs", nowTabs);
     },
     clearTabs(context) {
-      context.commit("clearTabs");
+      const model = { title: "首页", path: "/home", params: {}, query: {} }
+      context.commit("clearTabs", model);
+      // context.commit("selectTabs", model)
+    },
+    oneTabs(context, Tabs) {
+      context.commit("clearTabs", Tabs);
     }
   },
   getters: {

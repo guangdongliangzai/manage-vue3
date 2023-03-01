@@ -11,7 +11,8 @@ export const Local = {
     },
     get(key: string) {
         const json: any = window.localStorage.getItem(key)
-        return JSON.parse(json)
+        try { return JSON.parse(json) } catch (e) { return json }
+
     },
     remove(key: string) {
         window.localStorage.removeItem(key)
@@ -34,7 +35,7 @@ export const Session = {
     },
     get(key: string) {
         const json: any = window.sessionStorage.getItem(key)
-        return JSON.parse(json)
+        try { return JSON.parse(json) } catch (e) { return json }
     },
     remove(key: string) {
         window.sessionStorage.removeItem(key)

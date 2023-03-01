@@ -1,6 +1,5 @@
-// import { App, nextTick } from 'vue'
 // import router from '@/router/index'
-// import { useNavTabs } from '@/stores/navTabs'
+import useNavTabs from '@/store/modeules/router.js'
 
 
 
@@ -19,16 +18,17 @@ function authDirective(app) {
     app.directive('auth', {
         mounted(el, binding) {
             if (!binding.value) return false
-            const navTabs = { state: { authNode: "" } }// useNavTabs()
-            // if (navTabs.state.authNode.has(router.currentRoute.value.path)) {
-            //     if (
-            //         !navTabs.state.authNode
-            //             .get(router.currentRoute.value.path)!
-            //             .some((v: string) => v == router.currentRoute.value.path + '/' + binding.value)
-            //     ) {
-            //         el.parentNode.removeChild(el)
-            //     }
-            // }
+            const navTabs = useNavTabs()
+            console.log("@/stores/modeules/router", navTabs)
+            if (navTabs.state.authNode.has(useNavTabs.currentRoute.value.path)) {
+                // if (
+                //     !navTabs.state.authNode
+                //         .get(router.currentRoute.value.path)!
+                //         .some((v: string) => v == router.currentRoute.value.path + '/' + binding.value)
+                // ) {
+                //     el.parentNode.removeChild(el)
+                // }
+            }
         },
     })
 }
