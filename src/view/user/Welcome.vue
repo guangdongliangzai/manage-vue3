@@ -1,5 +1,7 @@
 <template>
-  <div class="main">{{ isCollapse }}</div>
+  <div class="main">
+    {{ isCollapse }}
+  </div>
 </template>
 
 <style lang="less" scoped>
@@ -9,9 +11,17 @@
 }
 </style>
 <script setup>
+import { watch } from "vue";
+
 let isCollapse = ref(false);
 onBeforeMount(() => {
   // console.log("Welcome", isCollapse);
   isCollapse.value = true;
 });
+
+const name_fn = () => {
+  isCollapse.value = !isCollapse.value;
+};
+
+// arr[-1]; // c
 </script>

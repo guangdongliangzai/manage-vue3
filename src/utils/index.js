@@ -145,6 +145,29 @@ class utils {
   }
 
   /**
+ * 单层数组不同数据类型去重
+ * @param {any} array:数组
+ * @param {any} type:输出srting或者number
+ */
+  stringNumberArrayDistinct(array, type = 'number') {
+    let newArr = []
+    array.forEach(item => {
+      if (type == 'number') {
+        if (!newArr.includes(Number(item))) {
+          newArr.push(Number(item))
+        }
+      }
+      if (type == 'string') {
+        if (!newArr.includes(item.toString())) {
+          newArr.push(item.toString())
+        }
+      }
+    })
+    return newArr
+  }
+
+
+  /**
  * 加载网络css文件
  * @param url css资源url
  */
