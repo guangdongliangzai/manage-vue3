@@ -68,7 +68,7 @@ export default defineConfig(({ mode }) => {
         },
         {
           find: "components",
-          replacement: "/src/components",
+          replacement: "/src/components",//全局的组件
         },
       ],
 
