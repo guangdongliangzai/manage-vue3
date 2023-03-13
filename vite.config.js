@@ -96,16 +96,28 @@ export default defineConfig(({ mode }) => {
       },
       rollupOptions: {
         output: {
-          manualChunks(id) {
+          // 最小化拆分包
+          manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1]
-                .split('/')[0].toString();
+              return id.toString().split('node_modules/')[1].split('/')[0].toString();
             }
-          }
-        }
+          },
+          // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
+          entryFileNames: 'js/[name].[hash].js',
+          // 用于命名代码拆分时创建的共享块的输出命名
+          chunkFileNames: 'js/[name].[hash].js',
+          // 用于输出静态资源的命名，[ext]表示文件扩展名
+          assetFileNames: '[ext]/[name].[hash].[ext]',
+          // 拆分js到模块文件夹
+          // chunkFileNames: (chunkInfo) => {
+          //     const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/') : [];
+          //     const fileName = facadeModuleId[facadeModuleId.length - 2] || '[name]';
+          //     return `js/${fileName}/[name].[hash].js`;
+          // },
+        },
       },
       cssCodeSplit: true, //  如果设置为false，整个项目中的所有 CSS 将被提取到一个 CSS 文件中
-      sourcemap: true, // 构建后是否生成 source map 文件。如果为 true，将会创建一个独立的 source map 文件
+      sourcemap: false, // 构建后是否生成 source map 文件。如果为 true，将会创建一个独立的 source map 文件
       target: 'modules', // 设置最终构建的浏览器兼容目标。默认值是一个 Vite 特有的值——'modules'  还可设置为 'es2015' 'es2016'等
       chunkSizeWarningLimit: 550, // 单位kb  打包后文件大小警告的限制 (文件大于此此值会出现警告)
       assetsInlineLimit: 4096, // 单位字节（1024等于1kb） 小于此阈值的导入或引用资源将内联为 base64 编码，以避免额外的 http 请求。设置为 0 可以完全禁用此项。
