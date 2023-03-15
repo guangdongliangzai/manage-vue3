@@ -10,12 +10,12 @@ import store from './store'
 import mitt from 'mitt'
 import filters from "./filters/index";
 import { directives } from '@/utils/directives'
-
+import pinia from '@/pinia'
 const app = createApp(App)
 for (let i in Icons) {
     app.component(`eleIcons-${i}`, Icons[i])
 }
-app.use(store)
+app.use(store).use(pinia)
 app.use(router).use(ElementPlus, { locale })
 
 // 全局注册

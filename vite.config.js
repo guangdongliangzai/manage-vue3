@@ -21,6 +21,11 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 //   mediaQuery: false, //（布尔值）允许在媒体查询中转换px
 //   minPixelValue: 1  //设置要替换的最小像素值(3px会被转rem)。 默认 0
 // }
+import path from 'path'
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
 
 // const CWD = process.cwd();
 export default defineConfig(({ mode }) => {
@@ -60,7 +65,7 @@ export default defineConfig(({ mode }) => {
       // }),
     ],
     resolve: {
-      extensions: [".vue", ".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"],
+      extensions: [".vue", ".js", ".mjs", ".ts", ".jsx", ".tsx", ".json"],
       alias: [
         {
           find: "@",
@@ -81,7 +86,20 @@ export default defineConfig(({ mode }) => {
             options: {
               appendTsSuffixTo: [/\.vue$/],
             }
-          }
+          },
+          {
+            test: /\.js$/i,
+            include: resolve('src'),
+            exclude: /node_modules/,
+            use: [
+              {
+                loader: 'babel-loader',
+                options: {
+                  cacheDirectory: true // 启用缓存-节省打包时间
+                }
+              },
+            ]
+          },
         ]
       }
     },

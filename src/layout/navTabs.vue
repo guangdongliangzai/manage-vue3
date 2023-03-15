@@ -80,9 +80,12 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import useCurrentInstance from "@/utils/useCurrentInstance";
 import { nextTick } from "vue";
+// import { piniaRouter } from "@/pinia/modeules/piniaRouter.js";
 const { proxy } = useCurrentInstance();
 const router = useRouter();
 const store = useStore(); //路由管理
+// const storeStore = piniaRouter(); //路由管理-----pinia
+
 let navTabs = reactive({ routerTabs: store.getters.routerTabs });
 const navTabspath = ref("");
 const emit = defineEmits(["emitMenu"]);
@@ -112,8 +115,7 @@ const initTabs = (route) => {
     params: params,
     query: query,
   };
-  store.dispatch("updateNowTabs", model);
-  store.dispatch("saveTabs", model);
+  store.dispatch("updateNowTabs", model); //更新路由
   document.title = routerName.value || meta.title;
   isTabs();
 };
@@ -159,9 +161,6 @@ const onContextmenu = (menu, index, el) => {
 const onContextmenuItem = (item) => {
   console.log(item.name);
   switch (item.name) {
-    // case "refresh":
-    //   location.reload();
-    //   break;
     case "close":
       closeTab(preventTab.menu, preventTab.index);
       break;

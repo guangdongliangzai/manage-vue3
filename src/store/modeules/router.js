@@ -1,7 +1,6 @@
 /**
  * 路由管理
  */
-import { Session } from "@/tool/storage";
 export default {
   namespace: 'true',
   state() {

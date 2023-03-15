@@ -32,3 +32,5 @@ VUEX模块添加：@store-modeules    持久化添加index.js-createPersistedsta
 storage封装：@tool/storage.ts
 
 全局样式: @style.less
+
+状态管理：pinia
