@@ -25,7 +25,7 @@ VUEX持久化:vuex-persistedstate
 
 添加全局组件：@components--vite.config配置路径
 
-VUEX模块添加：@store-modeules    持久化添加index.js-createPersistedstate
+VUEX模块添加：@store-modules    持久化添加index.js-createPersistedstate
 
 自动引入vue:src/utils/auto-import.d.ts --vite.config配置路径
 

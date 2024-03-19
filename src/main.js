@@ -10,7 +10,8 @@ import store from './store'
 import mitt from 'mitt'
 import filters from "./filters/index";
 import { directives } from '@/utils/directives'
-import pinia from '@/pinia'
+import pinia from '@/pinia/index.js'
+ 
 const app = createApp(App)
 for (let i in Icons) {
     app.component(`eleIcons-${i}`, Icons[i])
@@ -28,7 +29,6 @@ console.log("$filters", filters)
 app.config.globalProperties.$filters = {
     ...filters,
 };
-
 
 
 

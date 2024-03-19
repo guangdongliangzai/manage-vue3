@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-export const piniaRouter = defineStore('piniaRouter', {
+const piniaRouter = defineStore('Router', {
     state: () => {
         return {
             routerTabs: [],
@@ -35,7 +35,7 @@ export const piniaRouter = defineStore('piniaRouter', {
             }
         },
         //清理路由
-        clearTabs(item) {
+        oneTabs(item) {
             this.routerTabs = []
             this.routerTabs.push(item);
             this.selectTabs(item)
@@ -57,4 +57,7 @@ export const piniaRouter = defineStore('piniaRouter', {
     persist: {
         key: "_pinia_piniaRouter",
     },
+
 })
+
+export default piniaRouter

@@ -33,9 +33,14 @@
 import { login } from "@/api/user";
 // import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+
 import { Session } from "@/tool/storage";
-const store = useStore();
+
+// import { useStore } from "vuex";
+// const store = useStore();
+
+import piniaRouter from "@/pinia/modules/piniaRouter";
+const storeStore = piniaRouter(); //路由管理-----pinia
 
 const router = useRouter();
 const form = reactive({
@@ -52,8 +57,10 @@ const onSubmit = () => {
   ruleFormRef.value.validate(async (valid) => {
     if (valid) {
       const model = { title: "首页", path: "/home", params: {}, query: {} };
-      store.dispatch("updateNowTabs", model);
-      store.dispatch("saveTabs", model);
+      storeStore.updateNowTabs(model)
+      storeStore.saveTabs(model)
+      // store.dispatch("updateNowTabs", model);
+      // store.dispatch("saveTabs", model);
       document.title = document.title || meta.title;
       Session.set("userInfo", { ...form, name: "广东靓仔" });
       router.push({

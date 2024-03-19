@@ -246,11 +246,17 @@ import { reactive } from "vue-demi";
 import { useRouter } from "vue-router";
 import MenuTree from "./MenuTree.vue";
 import MenuHeader from "./navTabs.vue";
-import { useStore } from "vuex";
+
+// import { useStore } from "vuex";
+// const store = useStore();
+
+import piniaRouter from "@/pinia/modules/piniaRouter";
+const storeStore = piniaRouter(); //路由管理-----pinia
+
 import { Session, Local } from "@/tool/storage";
 
 const router = useRouter();
-const store = useStore();
+
 let timeTxt = ref(new Date().getTime());
 let isCollapse = ref(false);
 let menuLink = ref([
@@ -295,7 +301,8 @@ const onSubmit = () => {
 // 挂载 DOM 之前
 onBeforeMount(() => {
   userInfo = Session.get("userInfo");
-  activePath.value = store.getters.nowTabs.path || "/index";
+  // activePath.value = store.getters.nowTabs.path || "/index";
+  activePath.value = storeStore.nowTabs.path || "/index";
 });
 
 const emitMenu = (path) => {

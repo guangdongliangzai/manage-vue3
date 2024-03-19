@@ -54,9 +54,7 @@ const setOptions = () => {
         show: false,
       },
       axisLabel: {
-        textStyle: {
-          color: "#999",
-        },
+        color: "#999",
       },
     },
     dataZoom: [

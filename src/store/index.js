@@ -1,9 +1,9 @@
 import { createStore } from "vuex";
 import createPersistedstate from 'vuex-persistedstate'
 const modules = {};
-const files = import.meta.globEager('./modeules/*.js');
+const files = import.meta.globEager('./modules/*.js');
 Object.keys(files).forEach((fileName) => {
-  const name = fileName.replace(/\.\/modeules\/|\.js/g, '');
+  const name = fileName.replace(/\.\/modules\/|\.js/g, '');
   modules[name] = files[fileName].default;
 });
 

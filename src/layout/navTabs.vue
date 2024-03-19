@@ -76,17 +76,23 @@
 
 <script setup>
 import Contextmenu from "./contextmenu.vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import useCurrentInstance from "@/utils/useCurrentInstance";
-import { nextTick } from "vue";
-// import { piniaRouter } from "@/pinia/modeules/piniaRouter.js";
-const { proxy } = useCurrentInstance();
-const router = useRouter();
-const store = useStore(); //路由管理
-// const storeStore = piniaRouter(); //路由管理-----pinia
 
-let navTabs = reactive({ routerTabs: store.getters.routerTabs });
+// 路由管理;
+
+import useCurrentInstance from "@/utils/useCurrentInstance";
+const { proxy } = useCurrentInstance();
+
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+// import { useStore } from "vuex";
+// const store = useStore(); //路由管理
+// let navTabs = reactive({ routerTabs: store.getters.routerTabs });
+
+import piniaRouter from "@/pinia/modules/piniaRouter";
+const storeStore = piniaRouter(); //路由管理-----pinia
+let navTabs = reactive({ routerTabs: storeStore.routerTabs });
+
 const navTabspath = ref("");
 const emit = defineEmits(["emitMenu"]);
 // 挂载监听接收的标题
@@ -115,13 +121,16 @@ const initTabs = (route) => {
     params: params,
     query: query,
   };
-  store.dispatch("updateNowTabs", model); //更新路由
+
+  storeStore.updateNowTabs(model); //更新路由
+  // store.dispatch("updateNowTabs", model); //更新路由
   document.title = routerName.value || meta.title;
   isTabs();
 };
 //选了哪个tab
 const isTabs = () => {
-  const path = store.getters.nowTabs.path || "/index";
+  // const path = store.getters.nowTabs.path || "/index";
+  const path = storeStore.nowTabs.path || "/index";
   navTabspath.value = path;
 };
 //关闭tab
@@ -133,14 +142,18 @@ const closeTab = (item, index) => {
     }
     onTab(navTabs.routerTabs[tap]);
   }
-  store.dispatch("delTabs", item);
+  // store.dispatch("delTabs", item);
+  storeStore.delTabs(item); //更新路由
 };
 //切换
 const onTab = (item) => {
   const { path, params, query } = item;
-  if (path == store.getters.nowTabs.path) {
+  if (path == storeStore.nowTabs.path) {
     return;
   }
+  // if (path == store.getters.nowTabs.path) {
+  //   return;
+  // }
   router.push({ path: path, params: params, query: query });
   emit("emitMenu", path);
 };
@@ -165,14 +178,20 @@ const onContextmenuItem = (item) => {
       closeTab(preventTab.menu, preventTab.index);
       break;
     case "closeOther":
-      store.dispatch("oneTabs", preventTab.menu);
-      navTabs.routerTabs = store.getters.routerTabs;
+      // store.dispatch("oneTabs", preventTab.menu);
+      // navTabs.routerTabs = store.getters.routerTabs;
+      storeStore.oneTabs(preventTab.menu);
+      navTabs.routerTabs = storeStore.routerTabs;
+
       onTab(preventTab.menu);
       break;
     case "closeAll":
-      store.dispatch("clearTabs");
-      navTabs.routerTabs = store.getters.routerTabs;
-      router.push(store.getters.nowTabs);
+      storeStore.clearTabs();
+      navTabs.routerTabs = storeStore.routerTabs;
+      router.push(storeStore.nowTabs);
+      // store.dispatch("clearTabs");
+      // navTabs.routerTabs = store.getters.routerTabs;
+      // router.push(store.getters.nowTabs);
       break;
     default:
       break;

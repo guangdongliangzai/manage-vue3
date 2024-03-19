@@ -10,7 +10,10 @@ export async function login(data) {
 }
 
 export async function isget(data) {
-    let res = await http.get("/user/login", data);
+
+    let res = await http.get("/user/login", data).catch(err => {
+        console.log("获取信息失败", err);
+    });
     return res || {};
 }
 

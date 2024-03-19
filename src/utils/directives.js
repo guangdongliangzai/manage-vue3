@@ -1,5 +1,5 @@
 // import router from '@/router/index'
-import useNavTabs from '@/store/modeules/router.js'
+import useNavTabs from '@/store/modules/router.js'
 
 
 
@@ -19,7 +19,7 @@ function authDirective(app) {
         mounted(el, binding) {
             if (!binding.value) return false
             const navTabs = useNavTabs()
-            console.log("@/stores/modeules/router", navTabs)
+            console.log("@/stores/modules/router", navTabs)
             if (navTabs.state.authNode.has(useNavTabs.currentRoute.value.path)) {
                 // if (
                 //     !navTabs.state.authNode

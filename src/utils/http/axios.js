@@ -6,7 +6,7 @@ const instance = axios.create({
   // 接口
   baseURL: "/api",
   // 超时时间
-  timeout: 50000,
+  timeout: 1000,//50000,
 });
 // 2.请求拦截
 instance.interceptors.request.use(
