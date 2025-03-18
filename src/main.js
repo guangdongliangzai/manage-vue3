@@ -11,7 +11,8 @@ import mitt from 'mitt'
 import filters from "./filters/index";
 import { directives } from '@/utils/directives'
 import pinia from '@/pinia/index.js'
- 
+import http from '@/utils/http/http.js'
+
 const app = createApp(App)
 for (let i in Icons) {
     app.component(`eleIcons-${i}`, Icons[i])
@@ -29,6 +30,11 @@ console.log("$filters", filters)
 app.config.globalProperties.$filters = {
     ...filters,
 };
+
+// 请求封装
+app.config.globalProperties.$http = http;
+
+
 
 
 

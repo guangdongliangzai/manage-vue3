@@ -62,7 +62,7 @@ const onSubmit = () => {
       // store.dispatch("updateNowTabs", model);
       // store.dispatch("saveTabs", model);
       document.title = document.title || meta.title;
-      Session.set("userInfo", { ...form, name: "广东靓仔" });
+      Session.set("userInfo", { ...form, name: "棒棒哒" });
       router.push({
         path: "/home",
       });
