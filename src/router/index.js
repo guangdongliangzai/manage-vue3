@@ -20,7 +20,7 @@ const routes = [
         meta: { title: '主页' },
         component: () => import('@/layout/Home.vue'),
         redirect: '/index',
-        children: defaultRouter
+        children: [...defaultRouter]
     },
 ]
 const router = createRouter({

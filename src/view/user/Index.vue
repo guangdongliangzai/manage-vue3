@@ -34,7 +34,7 @@ const router = useRouter()
 
 onMounted(() => {
   // getUserList();
-  deleteUser(1)
+  // deleteUser(1)
 })
 // 用户数据
 let tableData = ref([])
