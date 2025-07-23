@@ -13,6 +13,7 @@ import { directives } from '@/utils/directives'
 import pinia from '@/pinia/index.js'
 import http from '@/utils/http/http.js'
 
+//   import "@/components/index.js"
 const app = createApp(App)
 for (let i in Icons) {
     app.component(`eleIcons-${i}`, Icons[i])
